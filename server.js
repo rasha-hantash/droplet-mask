@@ -52,8 +52,8 @@ app.post("/addNewMask", (req, res) => {
         // current timestamp in milliseconds
         let date1 = new Date();
         console.log(date1);
-        console.log(staffRes[0].fields['Droplett Date']);
-        let date2 = new Date(staffRes[0].fields['Droplett Date']);
+        console.log(staffRes[0].fields['Drop Date']);
+        let date2 = new Date(staffRes[0].fields['Drop Date']);
         console.log(date2);
         // To calculate the time difference of two dates 
         let Difference_In_Time = date2.getTime() - date1.getTime();
@@ -71,15 +71,15 @@ app.post("/addNewMask", (req, res) => {
         console.log(typeof Math.abs(Difference_In_Days));
         if(Math.floor(Math.abs(Difference_In_Days)) <= 7){
             const updateRes = await airtable.update(staffRes[0].id, {
-            ['Droplet Number']: staffRes[0].fields['Droplet Number'] + 1,
+            ['Droplet #']: staffRes[0].fields['Droplet #'] + 1,
             });
         } else {
           //call update
           //change date to current date
           console.log(date1.toLocaleDateString());
           const updateRes = await airtable.update(staffRes[0].id, {
-            ['Droplet Number']: 1,
-            ['Droplett Date']: date1.toLocaleDateString(),
+            ['Droplet #']: 1,
+            ['Drop Date']: date1.toLocaleDateString(),
             });
         }
         

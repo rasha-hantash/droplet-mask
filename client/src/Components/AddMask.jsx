@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Container, Button, Snackbar, TextField, InputAdornment, IconButton} from '@material-ui/core';
+import { Container, Button, Snackbar, TextField, InputAdornment, IconButton } from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
 import Scanner from './Scanner'
 import axios from 'axios';
@@ -9,7 +9,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const styles = theme => ({
@@ -22,18 +22,19 @@ const styles = theme => ({
     marginAutoItem: {
         margin: 'auto'
     },
-    alignItemsAndJustifyContent: {
-        width: 500,
-        height: 80,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'pink',
+    alignItemsLeft: {
+
+        ['@media (max-width:600px)']: { // mobile devices
+            marginRight: "90%",
+
+        },
+
+        ['@media  (min-width : 768px)']: //ipad
+        {
+            marginRight: "21%",
+        }
     },
     root: {
-        // '& .MuiTextField-root': {
-        //   margin: theme.spacing(1),
-        // },
 
         width: "40%",
         ['@media (max-width:600px)']: { // mobile devices
@@ -60,7 +61,9 @@ class AddMask extends React.Component {
             scanning: false,
             severity: 'success',
             message: 'Success!',
-            open: false
+            open: false,
+            horizontal: 'center',
+            vertical: 'top',
 
         };
         this.addNewMask = this.addNewMask.bind(this);
@@ -68,7 +71,7 @@ class AddMask extends React.Component {
     }
 
     _scan = () => {
-        this.setState({ scanning: !this.state.scanning })
+        this.setState({ ...this.state, scanning: !this.state.scanning })
     }
 
     _onDetected = result => {
@@ -120,20 +123,19 @@ class AddMask extends React.Component {
         let response = await axios.post('/addNewMask', staffBarcodeReq);
         console.log(response);
         this.state.message = response.data.message;
-        this.state.severity= response.data.severity;
-        // this.state.message = response.data;
-        this.setState({...this.state, open: true});
+        this.state.severity = response.data.severity;
+        this.setState({ ...this.state, open: true });
 
 
     }
 
     handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
         console.log('here');
-        this.setState({...this.state, open: false});
-      };
+        this.setState({ ...this.state, open: false });
+    };
 
     async backToMainPage() {
         this.props.history.push('/');
@@ -143,10 +145,14 @@ class AddMask extends React.Component {
         const { classes } = this.props;
         return (
             <Container className={classes.marginAutoContainer}>
-                <IconButton style={{ marginRight: '38%' }} onClick={this.backToMainPage}>
-                    <ArrowBackIcon></ArrowBackIcon>
-                </IconButton>
+
+
                 <form noValidate autoComplete="off" >
+                    <div className={classes.alignItemsLeft}  >
+                        <IconButton   className={classes.alignItemsLeft} onClick={this.backToMainPage}>
+                            <ArrowBackIcon></ArrowBackIcon>
+                        </IconButton>
+                    </div>
                     <TextField required className={classes.root}
                         id="standard-full-width"
                         name="staffBarcode"
@@ -168,10 +174,10 @@ class AddMask extends React.Component {
                 </form>
                 <form></form>
                 <Button className={classes.root} style={{ marginTop: "1%" }} color="primary" variant="outlined" onClick={this.addNewMask}>Add Mask</Button>
-                <Snackbar open={this.state.open} autoHideDuration={3000} onClose={this.handleClose}>
+                <Snackbar open={this.state.open} autoHideDuration={3000} onClose={this.handleClose} key={`${this.state.vertical}`}>
                     <Alert onClose={this.handleClose} severity={this.state.severity}>
                         {this.state.message}
-                </Alert>
+                    </Alert>
                 </Snackbar>
                 <div>
                     {(this.state.scanning) ? <Scanner onDetected={this._onDetected} /> : null}
