@@ -71,6 +71,7 @@ class AddMask extends React.Component {
     }
 
     _scan = () => {
+        this.state.lastresult= [];
         this.setState({ ...this.state, scanning: !this.state.scanning })
     }
 
@@ -125,6 +126,8 @@ class AddMask extends React.Component {
         this.state.message = response.data.message;
         this.state.severity = response.data.severity;
         this.setState({ ...this.state, open: true });
+        this.setState({ ...this.state, staffBarcode: [] });
+
 
 
     }
